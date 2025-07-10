@@ -1,23 +1,94 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="static/style.css">
     <title>Вход</title>
-    
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: white;
+        }
+
+        /* @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        } */
+
+        .form-login {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .t {
+            margin: 5px 0;
+        }
+
+        input[type="text"], 
+        input[type="password"] {
+            padding: 8px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        input[type="submit"] {
+            padding: 8px 20px;
+            background-color: rgba(255, 255, 255, 0.3);
+            color: white;
+            border: 2px solid white;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        input[type="submit"]:hover {
+            background-color: rgba(255, 255, 255, 0.5);
+        }
+
+        a {
+            color: white;
+            text-decoration: none;
+            border: 1px solid white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        a:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+    </style>
 </head>
 <body>
     <h1>Введите данные для входа на сайт</h1>
     <form action="" method="POST" class="form-login">
-    <p class="t">Email: <input type="text" name="email" required></p>
-    <p class="t">Пароль: <input type="password" name="password" required></p>
-    <p class="t"><input type="submit" value="Войти"></p>
+        <div class="t">
+            <label for="email">Email:</label>
+            <input type="text" name="email" id="email" required>
+        </div>
+        <div class="t">
+            <label for="password">Пароль:</label>
+            <input type="password" name="password" id="password" required>
+        </div>
+        <div class="t">
+            <input type="submit" value="Войти">
+        </div>
     </form>
-    <h2>{{result}}</h2>
-    <a href="/" >Регистрация</a>
+    <a href="/">Регистрация</a>
 </body>
 </html>
-

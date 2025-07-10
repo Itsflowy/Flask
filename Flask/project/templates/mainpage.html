@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head> 
+    <title>Главная с анимированным фоном</title>
+    <style>
+        /* Анимированный градиентный фон */
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        /* @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        } */
+        
+        /* Стили для кнопок (как в вашем проекте) */
+        .button-container {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .b-radius1, .b-radius2 {
+            padding: 12px 24px;
+            background: rgba(255, 255, 255, 0.3); /* Полупрозрачные белые */
+            color: white;
+            border: 2px solid white;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: bold;
+            backdrop-filter: blur(5px); /* Лёгкое размытие для "стеклянного" эффекта */
+            transition: all 0.3s ease;
+        }
+        
+        .b-radius1:hover, .b-radius2:hover {
+            background: rgba(255, 255, 255, 0.5);
+            transform: translateY(-3px);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="button-container">
+        <button class="b-radius1">Загрузить задание</button>
+        <button class="b-radius2">Решать задания</button>
+    </div>
+</body>
+</html>

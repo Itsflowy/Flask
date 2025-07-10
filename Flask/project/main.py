@@ -1,8 +1,6 @@
-####
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime 
-
 
 app=Flask(__name__, template_folder="templates", static_folder="static")
 app.config["SQLALCHEMY_DATABASE_URI"]="sqlite:///test.db"
@@ -50,7 +48,7 @@ def login():
     if request.method == 'POST':
         user = Users.query.filter_by(email=request.form['email']).first()
         if user and user.password == request.form['password']:
-            return render_template('login.html', result='Вы вошли')
+            return redirect(("mainpge.html"))
         else:
             return render_template('login.html', result='Вы не вошли')
 
