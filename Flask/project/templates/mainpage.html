@@ -1,56 +1,98 @@
 <!DOCTYPE html>
 <html>
-<head> 
-    <title>Главная с анимированным фоном</title>
+<head>
+    <title>Главная страница</title>
     <style>
-        /* Анимированный градиентный фон */
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
-            background-size: 400% 400%;
-            animation: gradientBG 15s ease infinite;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        
-        /* @keyframes gradientBG {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        } */
-        
-        /* Стили для кнопок (как в вашем проекте) */
-        .button-container {
-            display: flex;
-            gap: 20px;
-        }
-        
-        .b-radius1, .b-radius2 {
-            padding: 12px 24px;
-            background: rgba(255, 255, 255, 0.3); /* Полупрозрачные белые */
-            color: white;
-            border: 2px solid white;
-            border-radius: 30px;
-            cursor: pointer;
-            font-weight: bold;
-            backdrop-filter: blur(5px); /* Лёгкое размытие для "стеклянного" эффекта */
-            transition: all 0.3s ease;
-        }
-        
-        .b-radius1:hover, .b-radius2:hover {
-            background: rgba(255, 255, 255, 0.5);
-            transform: translateY(-3px);
-        }
+        .task { border: 1px solid #ccc; padding: 15px; margin: 15px 0; border-radius: 5px; }
+        .correct { background-color: #e6ffe6; }
+        .incorrect { background-color: #ffe6e6; }
+        .success { color: green; }
+        .error { color: red; }
+        .info { color: blue; }
     </style>
 </head>
-
 <body>
-    <div class="button-container">
-        <button class="b-radius1">Загрузить задание</button>
-        <button class="b-radius2">Решать задания</button>
+    <h1>Добро пожаловать, {{ profile.name }}!</h1>
+    <a href="/logout">Выйти</a>
+
+    <h2>Добавить новое задание</h2>
+    <form method="POST" enctype="multipart/form-data">
+        <div>
+            <label>Название задания:</label>
+            <input type="text" name="title" required>
+        </div>
+        <div>
+            <label>Описание задания:</label>
+            <textarea name="description"></textarea>
+        </div>
+
+        <div>
+            <label>Правильный ответ:</label>
+            <input type="text" name="correct_answer" required>
+        </div>
+        <button type="submit">Добавить задание</button>
+    </form>
+
+    <h2>Доступные задания</h2>
+    
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="{{ category }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    
+    {% for task in tasks %}
+    <div class="task {% if task.id in user_answers %}{% if user_answers[task.id].is_correct %}correct{% else %}incorrect{% endif %}{% endif %}">
+        <h3>{{ task.title }}</h3>
+        <p>{{ task.description }}</p>
+        {% if task.file_path %}
+        <!-- <p>Файл: <a href="/static/{{ task.file_path }}" target="_blank">Скачать</a></p> -->
+        {% endif %}
+        
+        {% if task.id not in user_answers %}
+        <form method="POST">
+            <input type="hidden" name="task_id" value="{{ task.id }}">
+            
+            {% if task.answer_type == 'text' %}
+                <label>Ваш ответ:</label>
+                <input type="text" name="answer" required>
+            
+            {% elif task.answer_type == 'radio' %}
+                <label>Выберите один вариант:</label><br>
+                {% for option in task.correct_answer.split(',') %}
+                <label>
+                    <input type="radio" name="answer" value="{{ option.strip() }}" required>
+                    {{ option.strip() }}
+                </label><br>
+                {% endfor %}
+            
+            {% elif task.answer_type == 'checkbox' %}
+                <!-- <label>Выберите правильные варианты:</label><br> -->
+                {% for option in task.correct_answer.split(',') %}
+                <label>
+                    <input type="checkbox" name="answer" value="{{ option.strip() }}">
+                    {{ option.strip() }}
+                </label><br>
+                {% endfor %}
+            {% endif %}
+            
+            <button type="submit">ответить</button>
+            <input type="text" name="title" required>
+        </form>
+        {% else %}
+            <p><strong>Ваш ответ:</strong> {{ user_answers[task.id].answer }}</p>
+            <p>Статус: {% if user_answers[task.id].is_correct %}Правильно!{% else %}Неправильно{% endif %}</p>
+        {% endif %}
+        
+        <small>Добавлено: {{ task.created_at.strftime('%Y-%m-%d %H:%M') }}</small>
+        {% if task.user_id == session['user_id'] %}
+            <a href="{{ url_for('complete_task', task_id=task.id) }}">Завершить задание</a>
+        {% endif %}
     </div>
+    {% else %}
+    <p>Нет доступных заданий</p>
+    {% endfor %}
 </body>
 </html>
